@@ -19,7 +19,7 @@ export const customRouteTemplates: ICustomRoute[] = [
 ];
 
 const routes: Route[] = [
-  { path: "hello", component: HelloComponent },
+  { path: '', component: HelloComponent },
 ];
 
 @NgModule({

@@ -14,7 +14,7 @@ import {
 import { Router, RouterOutlet, ActivatedRoute, ChildrenOutletContexts } from "@angular/router";
 
 @Directive({
-  selector: '[appCustomRouterOutletDirective]'
+  selector: 'bla'
 })
 export class CustomRouterOutletDirectiveDirective {
 
@@ -27,7 +27,7 @@ export class CustomRouterOutletDirectiveDirective {
     deactivate = new EventEmitter();
 
     constructor(private parentContexts: ChildrenOutletContexts, private location: ViewContainerRef,
-        private resolver: ComponentFactoryResolver, @Attribute("name") private name: string,
+        private resolver: ComponentFactoryResolver,
         private changeDetector: ChangeDetectorRef) { }
 
     ngOnInit(): void {

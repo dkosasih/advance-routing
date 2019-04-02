@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Route, Router, ActivatedRoute, NavigationStart, ActivatedRouteSnapshot } from '@angular/router';
+import { Route, Router, ActivatedRoute, NavigationStart, NavigationEnd, ActivatedRouteSnapshot } from '@angular/router';
 import { ICustomRoute, customRouteTemplates } from './app.module';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators'
@@ -29,14 +29,18 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+     this.router.events
+      .pipe(filter((event: any) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        console.log('end', this.activatedRoute.snapshot)
+      });
+
     this.router.events
       .pipe(filter((event: any) => event instanceof NavigationStart))
       .subscribe((event: NavigationStart) => {
-        // allocate any tab routes (tabs are added in auth guard)
-        // this.allocateRoutes(event.url);
         const rootChildren = this.router.parseUrl(event.url).root.children;
 
-        console.log('rc', event);
+        console.log('rc', rootChildren);
         Object.keys(rootChildren).forEach((key) => {
           // find route with outlet
           const route: Route = this.router.config
@@ -58,11 +62,16 @@ export class AppComponent implements OnInit, OnDestroy {
               return f.outlet === prefix;
             });
 
-          const shallowCopiedRouteTemplate = { ...routeTemplate };
+          let shallowCopiedRouteTemplate = { ...routeTemplate };
           shallowCopiedRouteTemplate.outlet = key;
 
-          console.log('snstart', this.activatedRoute.snapshot);
+          console.log('snap', this.activatedRoute);
+          console.log('templ', shallowCopiedRouteTemplate);
+          console.log('key', key);
           this.router.config.push(shallowCopiedRouteTemplate);
+
+          
+    // this.tabs.push({ outletName: key, route: null });
         });
       });
   }
@@ -71,19 +80,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  addTab(componentPath: string) {
-    console.log('sn', this.activatedRoute.snapshot);
-    console.log(this.router);
-
-    this.tabs.push({ outletName: `${componentPath}_${Date.now()}`, route: null });
+  addTab(outletBase:string, componentPath: string) {
+    const on = `${outletBase}_${Date.now()}`;
+    this.tabs.push({ outletName: on, route: null });
 
     const param = [
       componentPath,
     ];
 
     let ol = {};
-
-    ol[`${componentPath}_${Date.now()}`] = param /* this is reserve for parameters */;
+    ol[on] = param /* this is reserve for parameters */;
 
     this.router.navigate([{ outlets: ol }]);
   }
