@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Route, Router, ActivatedRoute, NavigationStart, NavigationEnd, ActivatedRouteSnapshot } from '@angular/router';
+import { Route, Router, ActivatedRoute, NavigationStart, GuardsCheckEnd, ActivatedRouteSnapshot } from '@angular/router';
 import { ICustomRoute, customRouteTemplates } from './app.module';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators'
@@ -30,8 +30,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
      this.router.events
-      .pipe(filter((event: any) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
+      .pipe(filter((event: any) => event instanceof GuardsCheckEnd))
+      .subscribe((event: GuardsCheckEnd) => {
         console.log('end', this.activatedRoute.snapshot)
       });
 

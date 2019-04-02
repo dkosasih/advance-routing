@@ -16,18 +16,18 @@ export interface ICustomRoute extends Route {
 
 export const customRouteTemplates: ICustomRoute[] = [
   {path: 'aaa', component: CompAComponent, outlet:'aa', canActivate: [CanActivateGuard]},
-  {path: 'bbb', component: CompBComponent, outlet:'bb', canActivate: [CanActivateGuard]},
+  {path: 'bbb', component: CompBComponent, outlet:'bb'},
 ];
 
 const routes: Route[] = [
-  { path: '', component: HelloComponent, canActivate: [CanActivateGuard]},
+  { path: '', component: HelloComponent},
 ];
 
 @NgModule({
   imports: [ 
     BrowserModule, 
     FormsModule, 
-    RouterModule.forRoot(customRouteTemplates),
+    RouterModule.forRoot(routes),
   ],
   declarations: [ AppComponent, HelloComponent, CompAComponent, CompBComponent, CustomRouterOutletDirectiveDirective ],
   providers:[CanActivateGuard],
