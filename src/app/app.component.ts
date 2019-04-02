@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
           if (route) {
             return;
           }
-          
+
           // get outletName to query against template
           const prefix: string = key.substr(0, key.indexOf("_"));
 
@@ -55,10 +55,10 @@ export class AppComponent implements OnInit, OnDestroy {
           const routeTemplate: Route | undefined = customRouteTemplates
             // filter by model route outlet
             .find((f) => {
-                return f.outlet === prefix;
+              return f.outlet === prefix;
             });
 
-          const shallowCopiedRouteTemplate = {...routeTemplate};
+          const shallowCopiedRouteTemplate = { ...routeTemplate };
           shallowCopiedRouteTemplate.outlet = key;
 
           console.log('snstart', this.activatedRoute.snapshot);
@@ -71,15 +71,20 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  addTab(component: string) {
-     console.log('sn', this.activatedRoute.snapshot);
-     console.log(this.router);
+  addTab(componentPath: string) {
+    console.log('sn', this.activatedRoute.snapshot);
+    console.log(this.router);
 
-    this.tabs.push({ outletName: `${component}_${Date.now()}`, route: null });
+    this.tabs.push({ outletName: `${componentPath}_${Date.now()}`, route: null });
 
-let ol = {};
+    const param = [
+      componentPath,
+    ];
 
-ol[`${component}_${Date.now()}`] = [] /* this is reserve for parameters */;
-   // this.router.navigate();
+    let ol = {};
+
+    ol[`${componentPath}_${Date.now()}`] = param /* this is reserve for parameters */;
+
+    this.router.navigate([{ outlets: ol }]);
   }
 }
