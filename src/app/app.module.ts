@@ -10,14 +10,12 @@ import { CompAComponent } from './components/comp-a/comp-a.component';
 import { CompBComponent } from './components/comp-b/comp-b.component';
 import { CustomRouterOutletDirectiveDirective } from './directives/custom-router-outlet-directive.directive';
 
-interface ICustomRoute {
-  path: string;
-  component: Function, 
+export interface ICustomRoute extends Route {
 }
 
-const customRouteTemplates: ICustomRoute[] = [
-  {path: 'aaa', component: CompAComponent},
-  {path: 'bbb', component: CompBComponent},
+export const customRouteTemplates: ICustomRoute[] = [
+  {path: 'aaa', component: CompAComponent, outlet:'aa'},
+  {path: 'bbb', component: CompBComponent, outlet:'bb'},
 ];
 
 const routes: Route[] = [

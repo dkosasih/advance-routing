@@ -1,10 +1,9 @@
-<p>
-  Start editing to see some magic happen :)
-</p>
-<button (click)="addTab('a')">add component 'a'</button>
-<button (click)="addTab('b')">add component 'b'</button>
+<button (click)="addTab('aaa')">add component 'a'</button>
+<button (click)="addTab('bbb')">add component 'b'</button>
 
 <router-outlet></router-outlet>
 
-
-<div appCustomRouterOutletDirective></div>
+<div *ngFor="let tab of tabs">
+	<div>{{tab.outletName}}</div>
+	<div appCustomRouterOutletDirective [outletName]="tab.outletName"></div>
+</div>
