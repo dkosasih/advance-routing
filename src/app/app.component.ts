@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import {Route} from '@angular/router';
+import {Route, Router, ActivatedRoute} from '@angular/router';
+import {ICustomRoute, customRouteTemplates} from './app.module';
 
 interface Tabs {
   outletName: string;
@@ -12,10 +13,12 @@ interface Tabs {
   styleUrls: [ './app.component.css' ]
 })
 export class AppComponent  {
+  alteredTemplate: {[key: string]: ICustomRoute}
   tabs: Tabs[];
 
 
   addTab(component:string){
     console.log(component);
+
   }
 }

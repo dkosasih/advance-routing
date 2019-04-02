@@ -15,7 +15,7 @@ interface ICustomRoute {
   component: Function, 
 }
 
-const customRoutes: ICustomRoute[] = [
+const customRouteTemplates: ICustomRoute[] = [
   {path: 'aaa', component: CompAComponent},
   {path: 'bbb', component: CompBComponent},
 ];
