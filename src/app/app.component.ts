@@ -22,20 +22,19 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-        private aref: ChangeDetectorRef,
+    private cd: ChangeDetectorRef,
   ) {
     customRouteTemplates.forEach((f) => {
       this.convertedTemplate[f.path] = f;
     });
   }
 
-  ngOnInit() {        
+  ngOnInit() {
     this.router.events
       .pipe(filter((event: any) => event instanceof NavigationStart))
       .subscribe((event: NavigationStart) => {
         const rootChildren = this.router.parseUrl(event.url).root.children;
 
-        console.log('rc', this.router.routerState.snapshot);
         Object.keys(rootChildren).forEach((key) => {
           // find route with outlet
           const route: Route = this.router.config
@@ -61,8 +60,10 @@ export class AppComponent implements OnInit, OnDestroy {
           shallowCopiedRouteTemplate.outlet = key;
 
           this.router.config.push(shallowCopiedRouteTemplate);
-          this.aref.detectChanges();
-          //this.tabs.push({ outletName: key, route: null });
+          this.tabs.push({ outletName: key, route: null });
+
+          // detect changes needed to mark another work of change detection after tab has been rendered
+          this.cd.detectChanges();
         });
       });
   }
@@ -71,9 +72,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  addTab(outletBase:string, componentPath: string) {
+  addTab(outletBase: string, componentPath: string) {
     const on = `${outletBase}_${Date.now()}`;
-    this.tabs.push({ outletName: on, route: null });
+    //this.tabs.push({ outletName: on, route: null });
 
     const param = [
       componentPath,
