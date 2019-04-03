@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Route, Router, ActivatedRoute, NavigationStart, GuardsCheckEnd, ActivatedRouteSnapshot } from '@angular/router';
+import { Component, OnInit, OnDestroy, ApplicationRef, ChangeDetectorRef } from '@angular/core';
+import { Route, Router, ActivatedRoute, NavigationStart, GuardsCheckEnd, NavigationEnd, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { ICustomRoute, customRouteTemplates } from './app.module';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators'
@@ -22,25 +22,20 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
+        private aref: ChangeDetectorRef,
   ) {
     customRouteTemplates.forEach((f) => {
       this.convertedTemplate[f.path] = f;
     });
   }
 
-  ngOnInit() {
-     this.router.events
-      .pipe(filter((event: any) => event instanceof GuardsCheckEnd))
-      .subscribe((event: GuardsCheckEnd) => {
-        console.log('end', this.activatedRoute.snapshot)
-      });
-
+  ngOnInit() {        
     this.router.events
       .pipe(filter((event: any) => event instanceof NavigationStart))
       .subscribe((event: NavigationStart) => {
         const rootChildren = this.router.parseUrl(event.url).root.children;
 
-        console.log('rc', rootChildren);
+        console.log('rc', this.router.routerState.snapshot);
         Object.keys(rootChildren).forEach((key) => {
           // find route with outlet
           const route: Route = this.router.config
@@ -65,13 +60,9 @@ export class AppComponent implements OnInit, OnDestroy {
           let shallowCopiedRouteTemplate = { ...routeTemplate };
           shallowCopiedRouteTemplate.outlet = key;
 
-          console.log('snap', this.activatedRoute);
-          console.log('templ', shallowCopiedRouteTemplate);
-          console.log('key', key);
           this.router.config.push(shallowCopiedRouteTemplate);
-
-          
-    // this.tabs.push({ outletName: key, route: null });
+          this.aref.detectChanges();
+          //this.tabs.push({ outletName: key, route: null });
         });
       });
   }

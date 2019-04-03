@@ -32,9 +32,9 @@ export class CustomRouterOutletDirectiveDirective {
 
     ngOnInit(): void {
         this.outlet = new RouterOutlet(this.parentContexts, this.location, this.resolver, this.outletName, this.changeDetector);
-        this.outlet.activateEvents.subscribe((d: any) => { this.activate.emit(d); });
-        this.outlet.deactivateEvents.subscribe((d: any) => { this.deactivate.emit(d); });
-
+        // this.outlet.activateEvents.subscribe((d: any) => {console.log('afdsffds'); this.activate.emit(d); });
+        // this.outlet.deactivateEvents.subscribe((d: any) => { this.deactivate.emit(d); });
+this.outlet.activateEvents
     }
     ngOnDestroy(): void {
         if (this.outlet) {
