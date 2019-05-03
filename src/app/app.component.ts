@@ -23,9 +23,6 @@ export class AppComponent implements OnInit, OnDestroy {
   tabs: Tabs[] = [];
   i = 0;
 
-  @ViewChildren(CustomRouterOutletDirectiveDirective)
-  outlets: QueryList<CustomRouterOutletDirectiveDirective>;
-
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -55,6 +52,10 @@ export class AppComponent implements OnInit, OnDestroy {
         const rootChildren = this.router.parseUrl(event.url).root.children;
 
         Object.keys(rootChildren).forEach((key) => {
+          if(key === 'primary'){
+            return;
+          }
+
           // find route with outlet
           const route: Route = this.router.config
             // get existing with same path and prefix
@@ -78,9 +79,12 @@ export class AppComponent implements OnInit, OnDestroy {
           let shallowCopiedRouteTemplate = { ...routeTemplate };
           shallowCopiedRouteTemplate.outlet = key;
 
+          // set lazy loading component router outlet
+          overrideRouteOutlet(key);
+
           this.router.config.push(shallowCopiedRouteTemplate);
           this.tabs.push({ outletName: key, route: null });
-
+        
           // detect changes needed to mark another work of change detection after tab has been rendered
           this.cd.detectChanges();
         });
@@ -94,9 +98,6 @@ export class AppComponent implements OnInit, OnDestroy {
   addTab(outletBase: string, componentPath: string) {
     const on = `${outletBase}_${this.i++}`;
     
-    // set lazy loading component router outlet
-    overrideRouteOutlet(on);
-
     const param = [
       componentPath,
     ];

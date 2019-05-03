@@ -7,24 +7,22 @@ import { ROUTES } from '@angular/router';
 import { Route } from '@angular/router';
 
 export let compBRoutes: Route[] = [
-  {
-    path: '',
-    component: CompBComponent,
-    outlet: 'bb'
-  }
 ];
 
-export function overrideRouteOutlet(outletName: string){
-  compBRoutes[0].outlet = outletName;
+export function overrideRouteOutlet(outletName: string) {
+  compBRoutes.push(
+    {
+      path: '',
+      component: CompBComponent,
+      outlet: outletName,
+      data: { routed: false }
+    });
 }
 
-function routeFactory(){
-  const a = [{
-    path: '',
-    component: CompBComponent,
-    outlet: compBRoutes[0].outlet
-  }];
-
+function routeFactory() {
+  const a = compBRoutes.find(x => x.data.routed === false);
+  a.data.routed = true;
+  console.log('fact', a);
   return a;
 }
 
@@ -35,10 +33,11 @@ function routeFactory(){
     RouterModule.forChild([]),
   ],
   declarations: [CompBComponent],
-   providers: [
+  providers: [
     {
       provide: ROUTES,
-      useFactory: (routeFactory),
+      useFactory: (() => routeFactory()),
+      //deps: [SomeService, SOME_TOKEN] // deps is optional, in the case you need no params - delete it; otherwise pass 'em
       multi: true
     }
   ],
@@ -46,5 +45,5 @@ function routeFactory(){
     CompBComponent
   ],
 })
-export class CompBModule { 
+export class CompBModule {
 }
