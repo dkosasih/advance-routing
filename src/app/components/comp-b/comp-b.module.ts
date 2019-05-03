@@ -1,43 +1,50 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { CompBComponent } from './comp-b.component';
-
+import { ROUTES } from '@angular/router';
 import { Route } from '@angular/router';
 
-// const routes: Route[] = [
-//   {
-//     path: '', children: [
-//       {
-//         path: 'bbb',
-//         component: CompBComponent
-//       }
-//     ]
-//   },
-// ];
-var i = 0;
-const routes: Route[] = [
+export let compBRoutes: Route[] = [
   {
     path: '',
     component: CompBComponent,
-    outlet: 'bb_' + i++
+    outlet: 'bb'
   }
 ];
+
+export function overrideRouteOutlet(outletName: string){
+  compBRoutes[0].outlet = outletName;
+}
+
+function routeFactory(){
+  const a = [{
+    path: '',
+    component: CompBComponent,
+    outlet: compBRoutes[0].outlet
+  }];
+
+  return a;
+}
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule.forChild(routes),
+    RouterModule.forChild([]),
   ],
   declarations: [CompBComponent],
-  providers: [],
-  // entryComponents: [
-  //   CompBComponent
-  // ],
+   providers: [
+    {
+      provide: ROUTES,
+      useFactory: (routeFactory),
+      multi: true
+    }
+  ],
+  entryComponents: [
+    CompBComponent
+  ],
 })
 export class CompBModule { 
-
-
 }

@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CustomRouterOutletDirectiveDirective } from './directives/custom-router-outlet-directive.directive';
 
+import {overrideRouteOutlet, compBRoutes} from './components/comp-b/comp-b.module';
+
 interface Tabs {
   outletName: string;
   route: Route;
@@ -35,17 +37,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.router.events.subscribe(e => {
-      if (e instanceof ActivationStart) {
-        this.outlets.forEach(x => {
-          const a = this.outlets.find(x => x.outletName === e.snapshot.outlet);
-          if (a != null) {
-            console.log('outlet deactivated');
-            a.outlet.deactivate();
-          }
-        });
-      }
-    });
+    // this.router.events.subscribe(e => {
+    //   if (e instanceof ActivationStart) {
+    //     this.outlets.forEach(x => {
+    //       const a = this.outlets.find(x => x.outletName === e.snapshot.outlet);
+    //       if (a != null) {
+    //         console.log('outlet deactivated');
+    //         a.outlet.deactivate();
+    //       }
+    //     });
+    //   }
+    // });
 
     this.router.events
       .pipe(filter((event: any) => event instanceof NavigationStart))
@@ -91,7 +93,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   addTab(outletBase: string, componentPath: string) {
     const on = `${outletBase}_${this.i++}`;
-    //this.tabs.push({ outletName: on, route: null });
+    
+    // set lazy loading component router outlet
+    overrideRouteOutlet(on);
 
     const param = [
       componentPath,
