@@ -18,8 +18,8 @@ import { Router, RouterOutlet, ActivatedRoute, ChildrenOutletContexts } from "@a
 })
 export class CustomRouterOutletDirectiveDirective {
 
-  private outlet: RouterOutlet;
-    @Input() private outletName: string;
+    outlet: RouterOutlet;
+    @Input() outletName: string;
 
     @Output()
     activate = new EventEmitter();

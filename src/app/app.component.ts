@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy, ApplicationRef, ChangeDetectorRef } from '@angular/core';
-import { Route, Router, ActivatedRoute, NavigationStart, GuardsCheckEnd, NavigationEnd, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { Component, OnInit, OnDestroy, ApplicationRef, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
+import { Route, Router, ActivatedRoute, NavigationStart, GuardsCheckEnd, NavigationEnd, RouterStateSnapshot, ActivatedRouteSnapshot, RouterOutlet, ActivationStart } from '@angular/router';
 import { ICustomRoute, customRouteTemplates } from './app.module';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators'
+import { filter } from 'rxjs/operators';
+import { CustomRouterOutletDirectiveDirective } from './directives/custom-router-outlet-directive.directive';
 
 interface Tabs {
   outletName: string;
@@ -18,7 +19,11 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   convertedTemplate: { [key: string]: ICustomRoute } = {};
   tabs: Tabs[] = [];
-i=0;
+  i = 0;
+
+  @ViewChildren(CustomRouterOutletDirectiveDirective)
+  outlets: QueryList<CustomRouterOutletDirectiveDirective>;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -30,6 +35,18 @@ i=0;
   }
 
   ngOnInit() {
+    this.router.events.subscribe(e => {
+      if (e instanceof ActivationStart) {
+        this.outlets.forEach(x => {
+          const a = this.outlets.find(x => x.outletName === e.snapshot.outlet);
+          if (a != null) {
+            console.log('outlet deactivated');
+            a.outlet.deactivate();
+          }
+        });
+      }
+    });
+
     this.router.events
       .pipe(filter((event: any) => event instanceof NavigationStart))
       .subscribe((event: NavigationStart) => {
