@@ -18,7 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   convertedTemplate: { [key: string]: ICustomRoute } = {};
   tabs: Tabs[] = [];
-
+i=0;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   addTab(outletBase: string, componentPath: string) {
-    const on = `${outletBase}_${Date.now()}`;
+    const on = `${outletBase}_${this.i++}`;
     //this.tabs.push({ outletName: on, route: null });
 
     const param = [
