@@ -18,8 +18,8 @@ import { Router, RouterOutlet, ActivatedRoute, ChildrenOutletContexts } from "@a
 })
 export class CustomRouterOutletDirectiveDirective {
 
-  private outlet: RouterOutlet;
-    @Input() private outletName: string;
+    outlet: RouterOutlet;
+    @Input() outletName: string;
 
     @Output()
     activate = new EventEmitter();
@@ -34,7 +34,7 @@ export class CustomRouterOutletDirectiveDirective {
         this.outlet = new RouterOutlet(this.parentContexts, this.location, this.resolver, this.outletName, this.changeDetector);
         this.outlet.activateEvents.subscribe((d: any) => { this.activate.emit(d); });
         this.outlet.deactivateEvents.subscribe((d: any) => { this.deactivate.emit(d); });
-
+this.outlet.activateEvents
     }
     ngOnDestroy(): void {
         if (this.outlet) {
