@@ -4,8 +4,8 @@ import { ICustomRoute, customRouteTemplates } from './app.module';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CustomRouterOutletDirectiveDirective } from './directives/custom-router-outlet-directive.directive';
-
-import {overrideRouteOutlet, compBRoutes} from './components/comp-b/comp-b.module';
+import { CompBComponent } from './components/comp-b/comp-b.component';
+import { RouteService } from './route.service';
 
 interface Tabs {
   outletName: string;
@@ -26,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private routeService: RouteService,
     private cd: ChangeDetectorRef,
   ) {
     customRouteTemplates.forEach((f) => {
@@ -80,7 +81,9 @@ export class AppComponent implements OnInit, OnDestroy {
           shallowCopiedRouteTemplate.outlet = key;
 
           // set lazy loading component router outlet
-          overrideRouteOutlet(key);
+          if(shallowCopiedRouteTemplate.loadChildren) {
+            this.routeService.overrideRouteOutlet(key, CompBComponent);
+          }
 
           this.router.config.push(shallowCopiedRouteTemplate);
           this.tabs.push({ outletName: key, route: null });

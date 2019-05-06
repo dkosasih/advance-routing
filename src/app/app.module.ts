@@ -11,6 +11,7 @@ import { CompBComponent } from './components/comp-b/comp-b.component';
 import { CompBModule } from './components/comp-b/comp-b.module';
 import { CustomRouterOutletDirectiveDirective } from './directives/custom-router-outlet-directive.directive';
 import {CanActivateGuard} from './can-activate.guard';
+import { RouteService } from './route.service';
 
 export interface ICustomRoute extends Route {
 }
